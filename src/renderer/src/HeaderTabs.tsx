@@ -83,7 +83,7 @@ export function HeaderTabs() {
 
   return (
     <div className={classes.header}>
-      <Container className={classes.mainSection} size="md">
+      <Container className={classes.mainSection} size="xl">
         <Group justify="space-between">
           <MantineLogo size={28} />
 
@@ -139,11 +139,10 @@ export function HeaderTabs() {
           </Menu>
         </Group>
       </Container>
-      <Container size="md">
+      <Container size="xl">
         <Tabs
           defaultValue="Home"
           variant="outline"
-          visibleFrom="sm"
           classNames={{
             root: classes.tabs,
             list: classes.tabsList,

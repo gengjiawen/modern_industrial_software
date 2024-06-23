@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import creatWorker from './excel_worker?nodeWorker'
 
 function createWindow(): void {
   // Create the browser window.
@@ -51,6 +52,19 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.handle('read-excel-file', (_event, args) => {
+    return new Promise((resolve, reject) => {
+      creatWorker({ workerData: 'worker' })
+        .on('message', (message) => {
+          resolve(message)
+        })
+        .on('error', (err) => {
+          reject(err)
+        })
+        .postMessage(args)
+    })
+  })
 
   createWindow()
 
