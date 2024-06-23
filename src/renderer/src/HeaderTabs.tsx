@@ -75,7 +75,7 @@ export function HeaderTabs() {
 
   const panels = tabs.map((tab) => (
     <Tabs.Panel value={tab.name} key={tab.name}>
-      <Container h={100} style={{ height: '100%' }}>
+      <Container h={100} style={{ height: '100%', maxWidth: 'none' }}>
         {tab.component()}
       </Container>
     </Tabs.Panel>
