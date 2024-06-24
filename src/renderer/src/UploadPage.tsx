@@ -3,6 +3,7 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps } from '@mantine/dropzone'
 import { useState } from 'react'
 import { LineChart } from '@mantine/charts'
+import { read, utils } from 'xlsx'
 
 export function UploadPage(props: Partial<DropzoneProps>) {
   const [file, setFile] = useState('')
@@ -18,14 +19,22 @@ export function UploadPage(props: Partial<DropzoneProps>) {
         onDrop={async (files) => {
           console.log('accepted files', files)
           setFile(files[0]?.path ?? '')
-          if (files[0]?.path?.endsWith('xlsx')) {
-            // @ts-ignore
-            const excelData = await window.electron.readExcelFile({
-              path: files[0].path,
-              sheet: 'SDD21'
-            })
-            console.log(excelData)
-            setData(excelData)
+          if (files[0].name.endsWith('xlsx')) {
+            const sheetName = 'SDD21'
+            if (files[0].path === '') {
+              const workbook = await read(await files[0].arrayBuffer())
+              const worksheet = workbook.Sheets[sheetName]
+              const data = utils.sheet_to_json(worksheet)
+              // @ts-ignore
+              setData(data)
+            } else {
+              // @ts-ignore
+              const excelData = await window.electron.readExcelFile({
+                path: files[0].path,
+                sheet: sheetName
+              })
+              setData(excelData)
+            }
           } else {
             setFileError('File must be an xlsx file')
           }
@@ -56,7 +65,7 @@ export function UploadPage(props: Partial<DropzoneProps>) {
               Drag files here or click to select files
             </Text>
             <Text size="sm" color="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed {max_m}mb
+              each file should not exceed {max_m}mb
             </Text>
           </div>
         </Group>
