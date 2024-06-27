@@ -5,3 +5,4 @@ image:
 tasks:
   - init: pnpm install
     command: pnpm dev
+  - init: sudo apt-get install rpm -y
