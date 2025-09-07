@@ -88,14 +88,6 @@ const tabs = [
     component: () => Home()
   },
   {
-    name: 'Orders',
-    component: () => <h2>Orders</h2>
-  },
-  {
-    name: 'Education',
-    component: () => <h2>Education</h2>
-  },
-  {
     name: 'Community',
     component: () => <h2>Community</h2>
   },
@@ -106,14 +98,6 @@ const tabs = [
   {
     name: 'Support',
     component: () => <h2>Support</h2>
-  },
-  {
-    name: 'Account',
-    component: () => <h2>Account</h2>
-  },
-  {
-    name: 'Helpdesk',
-    component: () => <h2>Helpdesk</h2>
   }
 ]
 
