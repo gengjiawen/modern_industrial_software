@@ -214,7 +214,7 @@ function MainTabs() {
   )
 }
 
-function App(): JSX.Element {
+function App() {
   return (
     <MantineProvider theme={theme}>
       <MainTabs />

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Versions(): JSX.Element {
+function Versions() {
   if (window.electron === undefined) {
     return <div>undefined</div>
   }
