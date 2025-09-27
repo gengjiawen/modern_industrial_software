@@ -1,56 +1,60 @@
 # Modern Industrial Software
 
-An Electron application with React and TypeScript
+> A modern, production-grade Electron + React + TypeScript + MantineUI template — out of the box, extensible, cross‑platform, with auto‑updates and built‑in i18n.
 
-Welcome to Modern Industrial Software, your go-to solution for agile software development using ElectronJS. By leveraging the power of ElectronJS, we've crafted a platform that combines the flexibility of web technologies with the robustness of desktop applications. Our integration with MantineUI ensures a seamless and visually appealing user experience.
+### Why this template
 
-## Key Features
+- **Lightning‑fast DX**: electron‑vite with instant HMR for a silky development loop.
+- **Modern UI**: Mantine UI + charts demo, theming, easy light/dark mode.
+- **Data processing & visualization**: Excel (.xlsx) parsing + line chart demo for common industrial data scenarios.
+- **Secure bridge**: minimal, testable `contextBridge` API over IPC.
+- **Cross‑platform + auto‑updates**: one codebase for Windows / macOS / Linux, integrated with `electron-updater`.
+- **Built‑in i18n**: i18next + react-i18next with `en-US` and `zh-CN` out of the box.
 
-### 🚀 Agile Development
-- **Rapid Prototyping**: Quickly bring your ideas to life with our streamlined development process.
-- **Iterative Improvements**: Easily implement changes and updates, ensuring your application evolves with your needs.
+### Project layout
 
-### 🌍 Cross-Platform Compatibility
-- **Windows, macOS, and Linux**: Develop once and deploy across all major desktop platforms without any additional overhead.
-- **Consistent User Experience**: Maintain the same look and feel across different operating systems, thanks to ElectronJS and MantineUI.
+- `src/main/`: Electron main process (window management, IPC, worker scheduling)
+- `src/preload/`: preload scripts (secure API bridge)
+- `src/renderer/`: frontend UI (React + MantineUI)
 
-### 🛠️ Ease of Development
-- **Web Technologies**: Utilize HTML, CSS, and JavaScript, making it accessible for web developers to create desktop applications.
-- **MantineUI Integration**: Enjoy a rich set of UI components that are easy to customize and enhance, speeding up your development process.
+### Featured demos
 
-## Recommended IDE Setup
+- File upload & Excel parsing: `src/renderer/src/UploadPage.tsx` (renderer parsing and main‑process worker parsing paths)
+- Secure bridge API: `src/preload/index.ts` exposes `window.electron.readExcelFile`
+- Excel worker: `src/main/excel_worker.ts`
+- Charts: `src/renderer/src/ChartDemo.tsx` using `@mantine/charts`
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+---
 
-## Project Setup
+## Quick start
 
 ### Install
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
-### Development
+### Develop
 
 ```bash
-$ pnpm dev
+pnpm dev
 ```
 
-### Build
+### Preview built app
 
 ```bash
-# For Windows
-$ pnpm build:win
-
-# For macOS
-$ pnpm build:mac
-
-# For Linux
-$ pnpm build:linux
+pnpm start
 ```
 
-## Get Started
+### Build installers
 
-1. **Clone the Repository**: Get the latest version from our GitHub repository.
-2. **Install Dependencies**: Run `pnpm install` to set up your development environment.
-3. **Start Developing**: Use `pnpm dev` to launch the development server and see your changes in real-time.
+```bash
+# Windows
+pnpm build:win
+
+# macOS
+pnpm build:mac
+
+# Linux (deb / rpm)
+pnpm build:linux
+```
