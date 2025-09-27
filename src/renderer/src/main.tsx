@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@mantine/core/styles.css'
+import './i18n'
 import '@mantine/charts/styles.css'
 import cx from 'clsx'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   MantineProvider,
   Container,
@@ -40,6 +42,7 @@ const user = {
 }
 
 function Home() {
+  const { t } = useTranslation()
   return (
     <Tabs
       variant="unstyled"
@@ -53,19 +56,19 @@ function Home() {
           value="settings"
           leftSection={<IconSettings style={{ width: rem(16), height: rem(16) }} />}
         >
-          Settings
+          {t('Settings')}
         </Tabs.Tab>
         <Tabs.Tab
           value="messages"
           leftSection={<IconMessageCircle style={{ width: rem(16), height: rem(16) }} />}
         >
-          Messages
+          {t('Messages')}
         </Tabs.Tab>
         <Tabs.Tab
           value="gallery"
           leftSection={<IconPhoto style={{ width: rem(16), height: rem(16) }} />}
         >
-          Gallery
+          {t('Gallery')}
         </Tabs.Tab>
       </Tabs.List>
 
@@ -82,32 +85,48 @@ function Home() {
   )
 }
 
+const Community = () => {
+  const { t } = useTranslation()
+  return <h2>{t('Community')}</h2>
+}
+
+const Forums = () => {
+  const { t } = useTranslation()
+  return <h2>{t('Forums')}</h2>
+}
+
+const Support = () => {
+  const { t } = useTranslation()
+  return <h2>{t('Support')}</h2>
+}
+
 const tabs = [
   {
     name: 'Home',
-    component: () => Home()
+    component: () => <Home />
   },
   {
     name: 'Community',
-    component: () => <h2>Community</h2>
+    component: () => <Community />
   },
   {
     name: 'Forums',
-    component: () => <h2>Forums</h2>
+    component: () => <Forums />
   },
   {
     name: 'Support',
-    component: () => <h2>Support</h2>
+    component: () => <Support />
   }
 ]
 
 function MainTabs() {
+  const { t } = useTranslation()
   const [opened, { toggle }] = useDisclosure(false)
   const [userMenuOpened, setUserMenuOpened] = useState(false)
 
   const items = tabs.map((tab) => (
     <Tabs.Tab value={tab.name} key={tab.name}>
-      {tab.name}
+      {t(tab.name)}
     </Tabs.Tab>
   ))
 
@@ -149,27 +168,27 @@ function MainTabs() {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Settings</Menu.Label>
+              <Menu.Label>{t('Settings')}</Menu.Label>
               <Menu.Item
                 leftSection={
                   <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
               >
-                Account settings
+                {t('Account settings')}
               </Menu.Item>
               <Menu.Item
                 leftSection={
                   <IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
               >
-                Change account
+                {t('Change account')}
               </Menu.Item>
               <Menu.Item
                 leftSection={
                   <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
               >
-                Logout
+                {t('Logout')}
               </Menu.Item>
 
               <Menu.Divider />

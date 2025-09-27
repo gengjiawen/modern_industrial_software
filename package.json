@@ -33,6 +33,8 @@
     "@mantinex/mantine-logo": "^1.0.1",
     "@tabler/icons-react": "^3.5.0",
     "electron-updater": "^6.6.2",
+    "i18next": "^25.5.2",
+    "react-i18next": "^16.0.0",
     "recharts": "2",
     "xlsx": "^0.18.5"
   },
