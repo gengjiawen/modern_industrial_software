@@ -30,7 +30,7 @@
     "@mantine/hooks": "7.10.2",
     "@mantine/modals": "7.10.2",
     "@mantine/notifications": "7.10.2",
-    "@mantinex/mantine-logo": "^1.0.1",
+    "@mantinex/mantine-logo": "^2.0.0",
     "@tabler/icons-react": "^3.35.0",
     "electron-updater": "^6.6.2",
     "i18next": "^25.5.2",
