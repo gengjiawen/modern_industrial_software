@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Keep npm/pnpm dependencies up to date in the repository root
+  - package-ecosystem: npm
+    directory: "/"
+    # Dependabot natively supports npm and yarn; for pnpm it still parses package.json and opens PRs; lockfile updates require pnpm installed in CI
+    schedule:
+      interval: monthly
+      time: "08:00"
+      timezone: Asia/Shanghai
+    # Group minor and patch updates to reduce noise
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps"
