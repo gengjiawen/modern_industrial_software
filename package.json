@@ -18,7 +18,7 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win --x64",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux deb rpm"
+    "build:linux": "electron-vite build && electron-builder --linux deb AppImage"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
