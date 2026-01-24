@@ -1,12 +1,25 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Menu, type MenuItemConstructorOptions } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import creatWorker from './excel_worker?nodeWorker'
 
-function createWindow(): void {
+let settingsWindow: BrowserWindow | null = null
+
+function loadRenderer(window: BrowserWindow, hash?: string): void {
+  // Load dev server URL in development, otherwise load packaged HTML.
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    const url = new URL(process.env['ELECTRON_RENDERER_URL'])
+    if (hash) url.hash = hash.startsWith('#') ? hash : `#${hash}`
+    window.loadURL(url.toString())
+  } else {
+    window.loadFile(join(__dirname, '../renderer/index.html'), hash ? { hash } : undefined)
+  }
+}
+
+function createMainWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  const window = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -18,22 +31,113 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+  window.on('ready-to-show', () => {
+    window.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  window.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  loadRenderer(window)
+}
+
+function openSettingsWindow(): void {
+  if (settingsWindow) {
+    settingsWindow.show()
+    settingsWindow.focus()
+    return
   }
+
+  const window = new BrowserWindow({
+    width: 860,
+    height: 600,
+    show: false,
+    title: 'Settings',
+    autoHideMenuBar: process.platform !== 'darwin',
+    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'darwin' ? { titleBarStyle: 'hiddenInset' as const } : {}),
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    }
+  })
+  settingsWindow = window
+
+  window.on('ready-to-show', () => {
+    window.show()
+  })
+
+  window.on('closed', () => {
+    settingsWindow = null
+  })
+
+  loadRenderer(window, 'settings')
+}
+
+function createAppMenu(): void {
+  const isMac = process.platform === 'darwin'
+  const settingsLabel = isMac ? 'Settings…' : 'Settings...'
+
+  const template: MenuItemConstructorOptions[] = [
+    ...(isMac
+      ? ([
+          {
+            label: app.name,
+            submenu: [
+              { role: 'about' },
+              { type: 'separator' },
+              {
+                label: settingsLabel,
+                accelerator: 'CmdOrCtrl+,',
+                click: () => openSettingsWindow()
+              },
+              { type: 'separator' },
+              { role: 'services' },
+              { type: 'separator' },
+              { role: 'hide' },
+              { role: 'hideOthers' },
+              { role: 'unhide' },
+              { type: 'separator' },
+              { role: 'quit' }
+            ]
+          }
+        ] satisfies MenuItemConstructorOptions[])
+      : []),
+    ...(!isMac
+      ? ([
+          {
+            label: 'File',
+            submenu: [
+              {
+                label: settingsLabel,
+                accelerator: 'Ctrl+,',
+                click: () => openSettingsWindow()
+              },
+              { type: 'separator' },
+              { role: 'quit' }
+            ]
+          }
+        ] satisfies MenuItemConstructorOptions[])
+      : []),
+    { role: 'editMenu' },
+    { role: 'viewMenu' },
+    { role: 'windowMenu' },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            await shell.openExternal('https://electron-vite.org')
+          }
+        }
+      ]
+    }
+  ]
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 
 // This method will be called when Electron has finished
@@ -49,6 +153,8 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  createAppMenu()
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
@@ -66,12 +172,12 @@ app.whenReady().then(() => {
     })
   })
 
-  createWindow()
+  createMainWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
   })
 })
 

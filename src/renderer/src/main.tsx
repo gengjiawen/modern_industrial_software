@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@mantine/core/styles.css'
+import './global.css'
 import './i18n'
 import '@mantine/charts/styles.css'
 import cx from 'clsx'
@@ -16,7 +17,8 @@ import {
   Menu,
   Tabs,
   Burger,
-  rem
+  rem,
+  localStorageColorSchemeManager
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import {
@@ -25,14 +27,14 @@ import {
   IconSwitchHorizontal,
   IconChevronDown,
   IconMessageCircle,
-  IconPhoto
+  IconUpload
 } from '@tabler/icons-react'
 import { MantineLogo } from '@mantinex/mantine-logo'
 import classes from './MainTabs.module.css'
 // Home styles merged into HeaderTabs.module.css as .homeTab
 import { ChartDemo } from './ChartDemo'
-import Versions from './components/Versions'
 import { UploadPage } from './UploadPage'
+import { SettingsPage } from './components/settings/SettingsPage'
 import { theme } from './theme'
 
 const user = {
@@ -46,17 +48,17 @@ function Home() {
   return (
     <Tabs
       variant="unstyled"
-      defaultValue="settings"
+      defaultValue="upload"
       classNames={{ tab: classes.homeTab }}
       orientation="vertical"
       style={{ marginTop: '20px' }}
     >
       <Tabs.List>
         <Tabs.Tab
-          value="settings"
-          leftSection={<IconSettings style={{ width: rem(16), height: rem(16) }} />}
+          value="upload"
+          leftSection={<IconUpload style={{ width: rem(16), height: rem(16) }} />}
         >
-          {t('Settings')}
+          {t('Upload')}
         </Tabs.Tab>
         <Tabs.Tab
           value="messages"
@@ -64,19 +66,10 @@ function Home() {
         >
           {t('Messages')}
         </Tabs.Tab>
-        <Tabs.Tab
-          value="gallery"
-          leftSection={<IconPhoto style={{ width: rem(16), height: rem(16) }} />}
-        >
-          {t('Gallery')}
-        </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="settings" className="w100">
+      <Tabs.Panel value="upload" className="w100">
         <UploadPage />
-      </Tabs.Panel>
-      <Tabs.Panel value="gallery">
-        <Versions />
       </Tabs.Panel>
       <Tabs.Panel value="messages">
         <ChartDemo />
@@ -215,9 +208,20 @@ function MainTabs() {
 }
 
 function App() {
+  const isSettingsRoute =
+    typeof window !== 'undefined' &&
+    (window.location.hash === '#settings' ||
+      window.location.hash === '#/settings' ||
+      window.location.hash.startsWith('#settings?') ||
+      window.location.hash.startsWith('#/settings?'))
+
   return (
-    <MantineProvider theme={theme}>
-      <MainTabs />
+    <MantineProvider
+      theme={theme}
+      defaultColorScheme="auto"
+      colorSchemeManager={localStorageColorSchemeManager({ key: 'app.colorScheme' })}
+    >
+      {isSettingsRoute ? <SettingsPage /> : <MainTabs />}
     </MantineProvider>
   )
 }

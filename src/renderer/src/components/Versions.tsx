@@ -1,18 +1,35 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Code, Group, Stack, Text } from '@mantine/core'
 
-function Versions() {
-  if (window.electron === undefined) {
-    return <div>undefined</div>
+export default function Versions() {
+  const { t } = useTranslation()
+
+  const versions = window.electron?.process?.versions
+
+  const items = useMemo(() => {
+    if (!versions) return []
+    return [
+      { label: t('Electron'), value: versions.electron },
+      { label: t('Chromium'), value: versions.chrome },
+      { label: t('Node'), value: versions.node }
+    ]
+  }, [t, versions])
+
+  if (!versions) {
+    return <Text c="dimmed">{t('Version info unavailable')}</Text>
   }
-  const [versions] = useState(window.electron.process.versions)
 
   return (
-    <ul className="versions">
-      <li className="electron-version">Electron v{versions.electron}</li>
-      <li className="chrome-version">Chromium v{versions.chrome}</li>
-      <li className="node-version">Node v{versions.node}</li>
-    </ul>
+    <Stack gap={6}>
+      {items.map((item) => (
+        <Group key={item.label} justify="space-between">
+          <Text size="sm" c="dimmed">
+            {item.label}
+          </Text>
+          <Code>{item.value}</Code>
+        </Group>
+      ))}
+    </Stack>
   )
 }
-
-export default Versions

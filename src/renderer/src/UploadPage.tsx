@@ -25,10 +25,10 @@ export function UploadPage(props: Partial<DropzoneProps>) {
               const workbook = await read(await files[0].arrayBuffer())
               const worksheet = workbook.Sheets[sheetName]
               const data = utils.sheet_to_json(worksheet)
-              // @ts-ignore
+              // @ts-expect-error sheet_to_json returns unknown[] by default
               setData(data)
             } else {
-              // @ts-ignore
+              // @ts-expect-error exposed by preload (see src/preload/index.ts)
               const excelData = await window.electron.readExcelFile({
                 path: files[0].path,
                 sheet: sheetName
