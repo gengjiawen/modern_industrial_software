@@ -48,7 +48,7 @@
     "@vitejs/plugin-react": "^5.1.2",
     "electron": "^39.2.7",
     "electron-builder": "^26.0.12",
-    "electron-vite": "^4.0.1",
+    "electron-vite": "^5.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.37.5",
     "postcss": "^8.5.6",
