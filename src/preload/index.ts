@@ -1,25 +1,27 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-// Custom APIs for renderer
-const api = {
-  readExcelFile: (args) => {
-    return ipcRenderer.invoke('read-excel-file', args)
-  }
+type ReadExcelFileArgs = {
+  path: string
+  sheet: string
 }
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+const api = {
+  readExcelFile: (args: ReadExcelFileArgs) => ipcRenderer.invoke('read-excel-file', args)
+}
+
+const electronBridge = {
+  ...electronAPI,
+  ...api
+}
+
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', { ...electronAPI, ...api })
+    contextBridge.exposeInMainWorld('electron', electronBridge)
   } catch (error) {
     console.error(error)
   }
 } else {
-  // @ts-expect-error (define in dts)
-  window.electron = electronAPI
-  // @ts-expect-error (define in dts)
-  window.api = api
+  // @ts-expect-error define in d.ts
+  window.electron = electronBridge
 }

@@ -13,6 +13,9 @@
     "noUnusedParameters": false,
     "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "src/renderer/src/*"
+      ],
       "@renderer/*": [
         "src/renderer/src/*"
       ]
