@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Info, Search, Settings2, SunMoon } from 'lucide-react'
+import { Info, Search, Settings2 } from 'lucide-react'
 
 import { useTheme } from '@/components/theme/ThemeProvider'
 import Versions from '@/components/Versions'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Select,

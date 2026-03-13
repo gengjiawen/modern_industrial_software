@@ -9,7 +9,8 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "format": "prettier --write .",
-    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "pnpm run typecheck:node && pnpm run typecheck:web",
@@ -38,8 +39,6 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
-    "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@tailwindcss/vite": "^4.2.1",
     "@types/node": "^22.18.6",
@@ -49,8 +48,7 @@
     "electron": "^40.6.1",
     "electron-builder": "^26.8.1",
     "electron-vite": "^5.0.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.37.5",
+    "oxlint": "^1.55.0",
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "react": "^18.2.0",
