@@ -1,8 +1,10 @@
+import { useAtom } from 'jotai'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Info, Search, Settings2 } from 'lucide-react'
 
 import { useTheme } from '@/components/theme/ThemeProvider'
+import { isSupportedLanguage, languageAtom } from '@/i18n/language'
 import Versions from '@/components/Versions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,11 +21,10 @@ import { cn } from '@/lib/utils'
 
 type SettingsSectionId = 'general' | 'about'
 
-const LANGUAGE_STORAGE_KEY = 'app.language'
-
 export function SettingsPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { theme, resolvedTheme, setTheme } = useTheme()
+  const [languageValue, setLanguageValue] = useAtom(languageAtom)
   const [activeSection, setActiveSection] = useState<SettingsSectionId>('general')
   const [query, setQuery] = useState('')
 
@@ -41,9 +42,6 @@ export function SettingsPage() {
 
     return sections.filter((section) => section.label.toLowerCase().includes(normalizedQuery))
   }, [query, sections])
-
-  const languageValue = i18n.resolvedLanguage === 'zh-CN' ? 'zh-CN' : 'en-US'
-
   return (
     <div className="space-y-4 p-4">
       <div>
@@ -112,13 +110,9 @@ export function SettingsPage() {
                   <Select
                     value={languageValue}
                     onValueChange={(value) => {
-                      try {
-                        window.localStorage.setItem(LANGUAGE_STORAGE_KEY, value)
-                      } catch {
-                        // Ignore persistence issues.
+                      if (isSupportedLanguage(value)) {
+                        setLanguageValue(value)
                       }
-
-                      void i18n.changeLanguage(value)
                     }}
                   >
                     <SelectTrigger className="h-8 w-full text-xs sm:max-w-xs">

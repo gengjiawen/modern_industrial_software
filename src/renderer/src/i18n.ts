@@ -1,32 +1,31 @@
 import i18n from 'i18next'
+import { getDefaultStore } from 'jotai'
 import { initReactI18next } from 'react-i18next'
 
+import { languageAtom, supportedLanguages } from './i18n/language'
 import enUS from './locales/en-US.json'
 import zhCN from './locales/zh-CN.json'
 
-const LANGUAGE_STORAGE_KEY = 'app.language'
-
-function getInitialLanguage(): string | undefined {
-  // localStorage is available in Electron renderer; guard for non-browser environments.
-  try {
-    if (typeof window === 'undefined') return undefined
-    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
-    if (stored === 'en-US' || stored === 'zh-CN') return stored
-    return undefined
-  } catch {
-    return undefined
-  }
-}
+const store = getDefaultStore()
+const initialLanguage = store.get(languageAtom)
 
 i18n.use(initReactI18next).init({
   resources: {
     'en-US': { translation: enUS },
     'zh-CN': { translation: zhCN }
   },
-  lng: getInitialLanguage(),
+  lng: initialLanguage,
   fallbackLng: 'en-US',
-  supportedLngs: ['en-US', 'zh-CN'],
+  supportedLngs: supportedLanguages,
   interpolation: { escapeValue: false }
+})
+
+store.sub(languageAtom, () => {
+  const language = store.get(languageAtom)
+
+  if (i18n.resolvedLanguage !== language) {
+    void i18n.changeLanguage(language)
+  }
 })
 
 export default i18n
