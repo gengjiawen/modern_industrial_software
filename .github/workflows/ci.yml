@@ -15,10 +15,17 @@ concurrency:
 
 jobs:
   build:
+    name: Package (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            build-script: build:linux
+          - os: windows-latest
+            build-script: build:win
+          - os: macos-latest
+            build-script: build:mac
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -39,18 +46,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Lint
+        run: pnpm lint
 
-      - name: Upload build artifacts
+      - name: Package application
+        run: pnpm ${{ matrix.build-script }}
+
+      - name: Upload packaged artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ runner.os }}
+          name: packaged-artifacts-${{ runner.os }}
           path: |
-            out/
-            dist/
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+            dist/*.AppImage
+            dist/*.deb
+            dist/latest*.yml
+            dist/*.blockmap
           if-no-files-found: ignore
           retention-days: 7
-
-
