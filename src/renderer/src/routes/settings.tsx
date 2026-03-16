@@ -14,5 +14,7 @@ export const Route = createFileRoute('/settings')({
 })
 
 function SettingsRoute() {
-  return <SettingsPage />
+  const search = Route.useSearch()
+
+  return <SettingsPage standalone={search.standalone === '1'} />
 }

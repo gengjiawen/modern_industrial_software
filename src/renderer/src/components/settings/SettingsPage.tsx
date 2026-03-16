@@ -21,7 +21,11 @@ import { cn } from '@/lib/utils'
 
 type SettingsSectionId = 'general' | 'about'
 
-export function SettingsPage() {
+type SettingsPageProps = {
+  standalone?: boolean
+}
+
+export function SettingsPage({ standalone = false }: SettingsPageProps) {
   const { t } = useTranslation()
   const { theme, resolvedTheme, setTheme } = useTheme()
   const [languageValue, setLanguageValue] = useAtom(languageAtom)
@@ -44,10 +48,12 @@ export function SettingsPage() {
   }, [query, sections])
   return (
     <div className="space-y-4 p-4">
-      <div>
-        <h1 className="text-lg font-semibold">{t('Settings')}</h1>
-        <p className="text-xs text-muted-foreground">{t('Settings description')}</p>
-      </div>
+      {standalone ? (
+        <div>
+          <h1 className="text-lg font-semibold">{t('Settings')}</h1>
+          <p className="text-xs text-muted-foreground">{t('Settings description')}</p>
+        </div>
+      ) : null}
       <div className="grid gap-3 lg:grid-cols-[200px_minmax(0,1fr)]">
         <Card className="h-fit py-2">
           <CardHeader className="px-3 pb-2 pt-0">
