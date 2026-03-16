@@ -47,6 +47,8 @@
   "Open settings": "Open settings",
   "Operations deck": "Operations deck",
   "Operations deck description": "Inspect uploads, compare signals, and keep every analysis local to the desktop runtime.",
+  "Page not found": "Page not found",
+  "Page not found description": "The requested workspace view does not exist for this hash.",
   "Pending": "Pending",
   "Pipeline lanes": "Pipeline lanes",
   "Preferences": "Preferences",

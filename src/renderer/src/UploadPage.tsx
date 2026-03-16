@@ -1,126 +1,25 @@
-import { useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, FileSpreadsheet, LineChart, UploadCloud } from 'lucide-react'
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart as RechartsLineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts'
 import { read, utils } from 'xlsx'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartLoadingCard } from '@/features/charts/ChartLoadingCard'
+import {
+  MAX_FILE_SIZE,
+  MAX_FILE_SIZE_MB,
+  buildChartPreview,
+  isSpreadsheetFile,
+  type WorksheetRow
+} from '@/features/upload/chartPreview'
 import { cn } from '@/lib/utils'
 
-type WorksheetRow = Record<string, unknown>
-type ChartRow = Record<string, number | string>
-type ChartSeries = { key: string; color: string }
-type ChartPreview = {
-  rows: ChartRow[]
-  labelKey: string
-  series: ChartSeries[]
-}
+const LazyWorkbookPreviewChart = lazy(async () => {
+  const module = await import('@/features/charts/WorkbookPreviewChart')
 
-const MAX_FILE_SIZE = 50 * 1024 ** 2
-const MAX_FILE_SIZE_MB = 50
-const CHART_COLORS = [
-  'var(--chart-1)',
-  'var(--chart-2)',
-  'var(--chart-3)',
-  'var(--chart-4)',
-  'var(--chart-5)'
-]
-
-function isSpreadsheetFile(file: File) {
-  return /\.(xlsx|xls)$/i.test(file.name)
-}
-
-function normalizeNumber(value: unknown) {
-  if (typeof value === 'number' && Number.isFinite(value)) return value
-
-  if (typeof value === 'string') {
-    const normalized = value.replace(/,/g, '').trim()
-    if (!normalized) return null
-
-    const parsed = Number(normalized)
-    if (Number.isFinite(parsed)) return parsed
-  }
-
-  return null
-}
-
-function buildChartPreview(rows: WorksheetRow[]): ChartPreview | null {
-  if (!rows.length) return null
-
-  const keys = Array.from(
-    rows.reduce((set, row) => {
-      Object.keys(row).forEach((key) => set.add(key))
-      return set
-    }, new Set<string>())
-  )
-
-  const numericKeys = keys.filter((key) => {
-    let numericCount = 0
-
-    for (const row of rows) {
-      if (normalizeNumber(row[key]) !== null) {
-        numericCount += 1
-      }
-
-      if (numericCount >= 2) {
-        return true
-      }
-    }
-
-    return false
-  })
-
-  if (!numericKeys.length) return null
-
-  const labelKey =
-    keys.find((key) =>
-      rows.some((row) => typeof row[key] === 'string' && String(row[key]).trim())
-    ) ?? keys[0]
-
-  const series = numericKeys.slice(0, CHART_COLORS.length).map((key, index) => ({
-    key,
-    color: CHART_COLORS[index]
-  }))
-
-  const chartRows = rows
-    .map((row, index) => {
-      const labelValue = row[labelKey]
-      const nextRow: ChartRow = {
-        [labelKey]: labelValue ? String(labelValue) : `${index + 1}`
-      }
-
-      let hasNumericValue = false
-
-      for (const item of series) {
-        const value = normalizeNumber(row[item.key])
-        if (value !== null) {
-          nextRow[item.key] = value
-          hasNumericValue = true
-        }
-      }
-
-      return hasNumericValue ? nextRow : null
-    })
-    .filter((row): row is ChartRow => row !== null)
-
-  if (!chartRows.length) return null
-
-  return {
-    rows: chartRows,
-    labelKey,
-    series
-  }
-}
+  return { default: module.WorkbookPreviewChart }
+})
 
 export function UploadPage() {
   const { t } = useTranslation()
@@ -299,55 +198,9 @@ export function UploadPage() {
         </CardHeader>
         <CardContent>
           {chartPreview ? (
-            <div className="space-y-5">
-              <div className="h-[340px] rounded-2xl border border-border/70 bg-background/70 p-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsLineChart data={chartPreview.rows}>
-                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey={chartPreview.labelKey}
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={10}
-                    />
-                    <YAxis tickLine={false} axisLine={false} tickMargin={10} />
-                    <Tooltip
-                      cursor={{ stroke: 'var(--border)', strokeWidth: 1 }}
-                      contentStyle={{
-                        borderRadius: '16px',
-                        borderColor: 'var(--border)',
-                        backgroundColor: 'var(--card)'
-                      }}
-                    />
-                    <Legend />
-                    {chartPreview.series.map((series) => (
-                      <Line
-                        key={series.key}
-                        type="monotone"
-                        dataKey={series.key}
-                        stroke={series.color}
-                        strokeWidth={2.4}
-                        dot={{ r: 0 }}
-                        activeDot={{ r: 5, fill: series.color }}
-                      />
-                    ))}
-                  </RechartsLineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium">
-                  <LineChart className="size-4 text-primary" />
-                  {t('Detected columns')}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {chartPreview.series.map((series) => (
-                    <Badge key={series.key} variant="outline" className="rounded-full px-3 py-1">
-                      {series.key}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <Suspense fallback={<ChartLoadingCard />}>
+              <LazyWorkbookPreviewChart preview={chartPreview} />
+            </Suspense>
           ) : rows.length ? (
             <div className="flex min-h-[340px] flex-col items-center justify-center gap-4 rounded-2xl border border-border/70 bg-background/70 p-8 text-center">
               <div className="rounded-full border border-border/70 bg-secondary/70 p-4 text-primary">

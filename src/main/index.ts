@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain, Menu, type MenuItemConstructorOptions } from 'electron'
 import { join } from 'path'
+import { pathToFileURL } from 'url'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import creatWorker from './excel_worker?nodeWorker'
@@ -7,14 +8,16 @@ import creatWorker from './excel_worker?nodeWorker'
 let settingsWindow: BrowserWindow | null = null
 
 function loadRenderer(window: BrowserWindow, hash?: string): void {
-  // Load dev server URL in development, otherwise load packaged HTML.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    const url = new URL(process.env['ELECTRON_RENDERER_URL'])
-    if (hash) url.hash = hash.startsWith('#') ? hash : `#${hash}`
-    window.loadURL(url.toString())
-  } else {
-    window.loadFile(join(__dirname, '../renderer/index.html'), hash ? { hash } : undefined)
+  const url =
+    is.dev && process.env['ELECTRON_RENDERER_URL']
+      ? new URL(process.env['ELECTRON_RENDERER_URL'])
+      : pathToFileURL(join(__dirname, '../renderer/index.html'))
+
+  if (hash) {
+    url.hash = hash
   }
+
+  void window.loadURL(url.toString())
 }
 
 function createMainWindow(): void {
@@ -73,7 +76,7 @@ function openSettingsWindow(): void {
     settingsWindow = null
   })
 
-  loadRenderer(window, 'settings')
+  loadRenderer(window, '#/settings?standalone=1')
 }
 
 function createAppMenu(): void {

@@ -47,6 +47,8 @@
   "Open settings": "打开设置",
   "Operations deck": "运行面板",
   "Operations deck description": "查看上传结果、对比信号走势，并将分析保留在本地桌面环境中。",
+  "Page not found": "页面不存在",
+  "Page not found description": "当前 hash 请求的工作区视图不存在。",
   "Pending": "待定",
   "Pipeline lanes": "处理通道",
   "Preferences": "偏好设置",

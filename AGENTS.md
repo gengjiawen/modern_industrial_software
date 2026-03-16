@@ -2,6 +2,7 @@
 
 - **Project**: Modern Industrial Software (Electron + React + TypeScript + shadcn/ui + Tailwind CSS)
 - **Goal**: Provide extensible desktop data processing and visualization, with cross-platform builds and auto-updates.
+- **Routing**: TanStack Router file-based routing in the renderer, using `createHashHistory()` with Electron URLs in the form `#/...`.
 - **State Management**: Jotai for renderer-side client state.
 - **Main Modules**:
   - `src/main/`: Electron main process (window management, IPC, worker scheduling)
@@ -24,3 +25,12 @@ Use pnpm as the package manager
 - Prefer Jotai `atomWithStorage` or related storage utilities for persisted renderer state.
 - Prefer colocating atoms with their feature under `src/renderer/src/`.
 - Keep atoms focused and composable; derive computed state with derived atoms when possible.
+
+#### Routing Conventions
+
+- Router bootstrap lives in `src/renderer/src/main.tsx` and `src/renderer/src/router.tsx`; do not reintroduce local view switching in `App.tsx`.
+- File routes live in `src/renderer/src/routes/`; keep `src/renderer/src/routeTree.gen.ts` checked in and regenerate it when routes change.
+- The shared desktop shell belongs to the root route; leaf routes should own page content only.
+- Use Router navigation primitives (`Link`, router state/hooks) instead of manual hash parsing or `hashchange` listeners.
+- Supported settings URLs are `#/settings` and `#/settings?standalone=1`; menu/shortcut driven standalone settings should use the latter.
+- Prefer normal route-level or component-level lazy loading only; do not add extra chart-specific bundle rules unless there is a demonstrated need.
