@@ -34,3 +34,9 @@ Use pnpm as the package manager
 - Use Router navigation primitives (`Link`, router state/hooks) instead of manual hash parsing or `hashchange` listeners.
 - Supported settings URLs are `#/settings` and `#/settings?standalone=1`; menu/shortcut driven standalone settings should use the latter.
 - Prefer normal route-level or component-level lazy loading only; do not add extra chart-specific bundle rules unless there is a demonstrated need.
+
+#### Documentation Conventions
+
+- Changes that alter project-wide architecture, routing, public entry points, build workflows, or core stack assumptions must update the relevant docs in the same change.
+- At minimum, check whether `AGENTS.md`, `README.md`, and any related `arch/*.md` plan or architecture document need to be updated.
+- Generated artifacts that are required for normal development flows, such as `src/renderer/src/routeTree.gen.ts`, must remain committed and reflected in docs when their workflow changes.
