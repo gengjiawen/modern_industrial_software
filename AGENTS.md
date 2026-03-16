@@ -32,6 +32,7 @@ Use pnpm as the package manager
 - File routes live in `src/renderer/src/routes/`; keep `src/renderer/src/routeTree.gen.ts` checked in and regenerate it when routes change.
 - The shared desktop shell belongs to the root route; leaf routes should own page content only.
 - Use Router navigation primitives (`Link`, router state/hooks) instead of manual hash parsing or `hashchange` listeners.
+- The global router preload strategy is `defaultPreload: 'viewport'`; treat it as the default unless a measured issue justifies a narrower or broader strategy.
 - Supported settings URLs are `#/settings` and `#/settings?standalone=1`; menu/shortcut driven standalone settings should use the latter.
 - Prefer normal route-level or component-level lazy loading only; do not add extra chart-specific bundle rules unless there is a demonstrated need.
 

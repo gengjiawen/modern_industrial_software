@@ -3,6 +3,7 @@
 ## Summary
 - Migrate the renderer from the current `useState`/`hashchange` approach to file-based routing with `TanStack Router`.
 - Use `createHashHistory()` consistently across the entire Electron app, with the URL convention fixed as `#/...`.
+- Use router preloading conservatively, with `defaultPreload: 'viewport'` as the global baseline to improve repeat navigation without eagerly preloading every route on render.
 - Preserve the current "dual-entry settings page" behavior: the main window can navigate to settings, while the menu/shortcuts continue to open a standalone settings window.
 - Keep the migration focused on routing and shell ownership, without introducing extra chart-specific bundling rules beyond normal route-level and component-level lazy loading.
 - Tighten the plan into implementation-level rules so development, production, typecheck, and build flows all behave consistently without hidden assumptions.
@@ -54,6 +55,7 @@
 - Routing ownership:
   - `src/renderer/src/main.tsx` should bootstrap the router once and stop rendering `App` as a local view switcher.
   - Route components own page content; the root route owns shell composition; reusable layout primitives stay outside the route tree.
+  - Keep router preloading at `defaultPreload: 'viewport'` unless profiling shows it should be changed; prefer route-level overrides over churn in the global default.
 - Hash handling:
   - Renderer code must treat the router as the only source of truth for the current location.
   - Main-process code must never inspect or normalize route meaning beyond passing the agreed hash string into `loadRenderer`.
