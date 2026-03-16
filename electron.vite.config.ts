@@ -1,9 +1,5 @@
-import { resolve } from 'path'
 import { defineConfig } from 'electron-vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-
-const rendererRoot = resolve('src/renderer/src')
+import { createRendererBaseConfig } from './vite.renderer.shared'
 
 export default defineConfig({
   main: {
@@ -16,13 +12,5 @@ export default defineConfig({
       externalizeDeps: true
     }
   },
-  renderer: {
-    resolve: {
-      alias: {
-        '@': rendererRoot,
-        '@renderer': rendererRoot
-      }
-    },
-    plugins: [react(), tailwindcss()]
-  }
+  renderer: createRendererBaseConfig()
 })

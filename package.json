@@ -8,6 +8,7 @@
   "scripts": {
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
+    "dev:render": "vite --config vite.renderer.config.ts",
     "format": "prettier --write .",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
