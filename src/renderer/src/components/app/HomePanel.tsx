@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { MessageSquareText, Upload } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { SignalTrendOverview } from '@/features/charts/SignalTrendOverview'
@@ -28,12 +28,6 @@ export function HomePanel() {
               <Link to="/upload">
                 <Upload className="size-4" />
                 {t('Upload')}
-              </Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/messages">
-                <MessageSquareText className="size-4" />
-                {t('Messages')}
               </Link>
             </Button>
           </div>

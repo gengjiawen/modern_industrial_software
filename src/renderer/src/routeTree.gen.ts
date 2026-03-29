@@ -12,9 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UploadRouteImport } from './routes/upload'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as MessagesRouteImport } from './routes/messages'
-import { Route as ForumsRouteImport } from './routes/forums'
-import { Route as CommunityRouteImport } from './routes/community'
 import { Route as IndexRouteImport } from './routes/index'
 
 const UploadRoute = UploadRouteImport.update({
@@ -32,21 +29,6 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MessagesRoute = MessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForumsRoute = ForumsRouteImport.update({
-  id: '/forums',
-  path: '/forums',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,18 +37,12 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/community': typeof CommunityRoute
-  '/forums': typeof ForumsRoute
-  '/messages': typeof MessagesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/upload': typeof UploadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/community': typeof CommunityRoute
-  '/forums': typeof ForumsRoute
-  '/messages': typeof MessagesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/upload': typeof UploadRoute
@@ -74,48 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/community': typeof CommunityRoute
-  '/forums': typeof ForumsRoute
-  '/messages': typeof MessagesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/upload': typeof UploadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/community'
-    | '/forums'
-    | '/messages'
-    | '/settings'
-    | '/support'
-    | '/upload'
+  fullPaths: '/' | '/settings' | '/support' | '/upload'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/community'
-    | '/forums'
-    | '/messages'
-    | '/settings'
-    | '/support'
-    | '/upload'
-  id:
-    | '__root__'
-    | '/'
-    | '/community'
-    | '/forums'
-    | '/messages'
-    | '/settings'
-    | '/support'
-    | '/upload'
+  to: '/' | '/settings' | '/support' | '/upload'
+  id: '__root__' | '/' | '/settings' | '/support' | '/upload'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CommunityRoute: typeof CommunityRoute
-  ForumsRoute: typeof ForumsRoute
-  MessagesRoute: typeof MessagesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   UploadRoute: typeof UploadRoute
@@ -144,27 +92,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/messages': {
-      id: '/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forums': {
-      id: '/forums'
-      path: '/forums'
-      fullPath: '/forums'
-      preLoaderRoute: typeof ForumsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/community': {
-      id: '/community'
-      path: '/community'
-      fullPath: '/community'
-      preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -177,9 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CommunityRoute: CommunityRoute,
-  ForumsRoute: ForumsRoute,
-  MessagesRoute: MessagesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   UploadRoute: UploadRoute,

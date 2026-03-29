@@ -4,12 +4,9 @@ import { useTranslation } from 'react-i18next'
 import {
   Factory,
   Home,
-  MessageSquareText,
-  PanelsTopLeft,
   Settings,
   ShieldCheck,
-  Upload,
-  Users
+  Upload
 } from 'lucide-react'
 
 import {
@@ -28,7 +25,7 @@ import {
 type NavItem = {
   icon: React.ComponentType<{ className?: string }>
   label: string
-  to: '/' | '/upload' | '/messages' | '/community' | '/forums' | '/support' | '/settings'
+  to: '/' | '/upload' | '/support' | '/settings'
 }
 
 export function AppSidebar() {
@@ -37,13 +34,10 @@ export function AppSidebar() {
 
   const primaryItems: NavItem[] = [
     { icon: Home, label: t('Home'), to: '/' },
-    { icon: Upload, label: t('Upload'), to: '/upload' },
-    { icon: MessageSquareText, label: t('Messages'), to: '/messages' }
+    { icon: Upload, label: t('Upload'), to: '/upload' }
   ]
 
   const secondaryItems: NavItem[] = [
-    { icon: Users, label: t('Community'), to: '/community' },
-    { icon: PanelsTopLeft, label: t('Forums'), to: '/forums' },
     { icon: ShieldCheck, label: t('Support'), to: '/support' }
   ]
 
