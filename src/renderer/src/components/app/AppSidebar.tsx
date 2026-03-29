@@ -1,13 +1,7 @@
 import type React from 'react'
 import { Link, useMatchRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  Factory,
-  Home,
-  Settings,
-  ShieldCheck,
-  Upload
-} from 'lucide-react'
+import { Factory, Home, Settings, ShieldCheck, Upload } from 'lucide-react'
 
 import {
   Sidebar,
@@ -37,9 +31,7 @@ export function AppSidebar() {
     { icon: Upload, label: t('Upload'), to: '/upload' }
   ]
 
-  const secondaryItems: NavItem[] = [
-    { icon: ShieldCheck, label: t('Support'), to: '/support' }
-  ]
+  const secondaryItems: NavItem[] = [{ icon: ShieldCheck, label: t('Support'), to: '/support' }]
 
   function renderItems(items: NavItem[]) {
     return items.map((item) => {

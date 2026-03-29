@@ -12,6 +12,15 @@
 - **Secure bridge**: minimal, testable `contextBridge` API over IPC.
 - **Cross‑platform + auto‑updates**: one codebase for Windows / macOS / Linux, integrated with `electron-updater`.
 - **Built‑in i18n**: i18next + react-i18next with `en-US` and `zh-CN` out of the box.
+- **High‑performance tooling**: Oxc-powered linting and formatting (oxlint + oxfmt) for instant feedback and consistent code style without the slowdown of traditional tools.
+
+### Quality & Performance
+
+This project uses the [Oxc](https://oxc.rs/) toolchain for code quality:
+
+- **Linting**: `pnpm lint` / `pnpm lint:fix` — oxlint is 50–100× faster than ESLint with extensive rule coverage.
+- **Formatting**: `pnpm run format` — oxfmt replaces Prettier with near-instant formatting.
+- Zero-config defaults with sensible presets; customize via `.oxlintrc.json` and `.oxfmtrc.json`.
 
 ### Project layout
 

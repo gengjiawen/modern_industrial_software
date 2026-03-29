@@ -1,6 +1,7 @@
 # TanStack Router + Hash History Migration Plan
 
 ## Summary
+
 - Migrate the renderer from the current `useState`/`hashchange` approach to file-based routing with `TanStack Router`.
 - Use `createHashHistory()` consistently across the entire Electron app, with the URL convention fixed as `#/...`.
 - Use router preloading conservatively, with `defaultPreload: 'viewport'` as the global baseline to improve repeat navigation without eagerly preloading every route on render.
@@ -9,6 +10,7 @@
 - Tighten the plan into implementation-level rules so development, production, typecheck, and build flows all behave consistently without hidden assumptions.
 
 ## Key Changes
+
 - Dependencies and build configuration:
   - Add the runtime dependency `@tanstack/react-router`.
   - Add the development dependency `@tanstack/router-plugin`.
@@ -52,6 +54,7 @@
   - Keep existing translated labels stable where possible so the migration remains primarily infrastructural rather than a UI copy change.
 
 ## Implementation Rules
+
 - Routing ownership:
   - `src/renderer/src/main.tsx` should bootstrap the router once and stop rendering `App` as a local view switcher.
   - Route components own page content; the root route owns shell composition; reusable layout primitives stay outside the route tree.
@@ -69,6 +72,7 @@
   - Any route structure change is incomplete unless the generated route tree is refreshed and committed in the same change.
 
 ## Public Interfaces / Contracts
+
 - The renderer URL contract is fixed as:
   - `#/`
   - `#/upload`
@@ -91,6 +95,7 @@
   - Unknown hashes do not silently coerce to home
 
 ## Delivery Sequence
+
 1. Add router dependencies and shared Vite configuration support for TanStack Router generation and chunk rules.
 2. Introduce the route tree, root layout route, and leaf routes without changing main-process settings-window behavior yet.
 3. Move current `App.tsx` shell/view logic into route components and remove local route state.
@@ -99,6 +104,7 @@
 6. Run verification, refresh `routeTree.gen.ts`, and commit the generated artifact with the route migration.
 
 ## Test Plan
+
 - Static checks:
   - `pnpm run typecheck`
   - `pnpm run build`
@@ -120,6 +126,7 @@
   - Confirm the standalone settings window and main window both work in development and packaged builds with the same hash format.
 
 ## Assumptions
+
 - The routing solution has been chosen as `TanStack Router + file-based routing + createHashHistory()`.
 - The settings-page behavior has been chosen to preserve both the main-window settings page and the standalone settings window.
 - Chart handling should stay minimal: use normal route-level and component-level lazy loading only, without additional named chart chunk strategy.

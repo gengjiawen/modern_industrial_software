@@ -11,6 +11,11 @@
 
 Use pnpm as the package manager
 
+#### Code Quality Conventions
+
+- **Linting**: oxlint (via `pnpm lint` / `pnpm lint:fix`). Configuration in `.oxlintrc.json`.
+- **Formatting**: oxfmt (via `pnpm run format`). Configuration in `.oxfmtrc.json`.
+
 #### i18n Conventions
 
 - Stack: i18next + react-i18next; init at src/renderer/src/i18n.ts and import once in src/renderer/src/main.tsx.
