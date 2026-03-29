@@ -63,6 +63,13 @@ pnpm run routes:generate
 pnpm start
 ```
 
+### Run E2E tests
+
+```bash
+# Builds the app and verifies Electron starts without crashing or white screen
+pnpm test:e2e
+```
+
 ### Build installers
 
 ```bash

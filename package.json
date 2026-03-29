@@ -21,7 +21,8 @@
     "build:unpack": "pnpm run build && electron-builder --dir",
     "build:win": "pnpm run build && electron-builder --win --x64",
     "build:mac": "pnpm run build && electron-builder --mac",
-    "build:linux": "pnpm run build && electron-builder --linux deb AppImage"
+    "build:linux": "pnpm run build && electron-builder --linux deb AppImage",
+    "test:e2e": "pnpm run build && playwright test --config playwright.config.ts"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/router-plugin": "^1.166.12",
     "@types/node": "^22.18.6",
