@@ -1,0 +1,2 @@
+# TanStack Router codegen (committed artifact; avoid formatter churn)
+src/renderer/src/routeTree.gen.ts
