@@ -46,3 +46,11 @@ Use pnpm as the package manager
 - Changes that alter project-wide architecture, routing, public entry points, build workflows, or core stack assumptions must update the relevant docs in the same change.
 - At minimum, check whether `AGENTS.md`, `README.md`, and any related `arch/*.md` plan or architecture document need to be updated.
 - Generated artifacts that are required for normal development flows, such as `src/renderer/src/routeTree.gen.ts`, must remain committed and reflected in docs when their workflow changes.
+
+## Cursor Cloud specific instructions
+
+- **No external services required.** This is a self-contained Electron desktop app with no database, backend API, or Docker dependencies.
+- **Running the dev server:** `DISPLAY=:1 pnpm dev` — the `DISPLAY=:1` env var is required in headless Cloud VMs so Electron can render on the Xvfb virtual framebuffer.
+- **D-Bus errors at startup are benign.** Electron logs `Failed to connect to the bus` errors in headless environments; these do not affect functionality.
+- **E2E tests:** Run `DISPLAY=:1 npx playwright test --config playwright.config.ts` after `pnpm build`. The `pnpm test:e2e` script combines both steps. Playwright Chromium browsers must be installed first via `npx playwright install --with-deps chromium`.
+- **Key commands** are documented in `README.md` (Quick start section) and `package.json` scripts: `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm dev`, `pnpm test:e2e`.
