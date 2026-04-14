@@ -4,55 +4,9 @@ import { pathToFileURL } from 'url'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import creatWorker from './excel_worker?nodeWorker'
+import { registerRendererConsoleIpc } from './rendererLogging'
 
 let settingsWindow: BrowserWindow | null = null
-
-type RendererConsoleLevel = 'log' | 'info' | 'warn' | 'error'
-type RendererBrowserToTerminal = boolean | 'warn' | 'error'
-
-type RendererConsolePayload = {
-  level: RendererConsoleLevel
-  message: string
-  source?: string
-}
-
-const rendererLogging: { browserToTerminal: RendererBrowserToTerminal } = {
-  browserToTerminal: is.dev ? 'warn' : false
-}
-
-function shouldWriteRendererLog(level: RendererConsoleLevel): boolean {
-  switch (rendererLogging.browserToTerminal) {
-    case true:
-      return true
-    case 'warn':
-      return level === 'warn' || level === 'error'
-    case 'error':
-      return level === 'error'
-    default:
-      return false
-  }
-}
-
-function writeRendererLog(payload: RendererConsolePayload): void {
-  const locationSuffix = payload.source ? ` (${payload.source})` : ''
-  const message = payload.message
-    ? `[renderer] ${payload.message}${locationSuffix}`
-    : `[renderer]${locationSuffix}`
-
-  switch (payload.level) {
-    case 'error':
-      console.error(message)
-      return
-    case 'warn':
-      console.warn(message)
-      return
-    case 'info':
-      console.info(message)
-      return
-    default:
-      console.log(message)
-  }
-}
 
 function loadRenderer(window: BrowserWindow, hash?: string): void {
   const url =
@@ -208,13 +162,7 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
-  ipcMain.on('renderer-console', (_event, payload: RendererConsolePayload) => {
-    if (!shouldWriteRendererLog(payload.level)) {
-      return
-    }
-
-    writeRendererLog(payload)
-  })
+  registerRendererConsoleIpc(ipcMain)
 
   ipcMain.handle('read-excel-file', (_event, args) => {
     return new Promise((resolve, reject) => {

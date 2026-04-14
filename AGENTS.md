@@ -19,7 +19,7 @@ Use pnpm as the package manager
 #### Logging Conventions
 
 - In development, renderer `console.log/info/warn/error` output is mirrored to the main-process terminal through preload IPC.
-- The forwarding mode is configured in `src/main/index.ts` via `rendererLogging.browserToTerminal`; default is `'warn'`, which mirrors renderer `warn` and `error` output in a Next.js-style browser-to-terminal flow.
+- The forwarding mode is configured in `src/main/rendererLogging.ts` via `rendererLogging.browserToTerminal`; default is `'warn'`, which mirrors renderer `warn` and `error` output in a Next.js-style browser-to-terminal flow.
 - Preserve the original browser console behavior when extending renderer logging; terminal mirroring is additive and should continue to include source locations when available.
 
 #### i18n Conventions
