@@ -1,34 +1,10 @@
 import type { IpcMain } from 'electron'
-import { is } from '@electron-toolkit/utils'
-
-export type RendererConsoleLevel = 'log' | 'info' | 'warn' | 'error'
-export type RendererBrowserToTerminal = boolean | 'warn' | 'error'
-
-export type RendererConsolePayload = {
-  level: RendererConsoleLevel
-  message: string
-  source?: string
-}
-
-/** Must stay in sync with preload `ipcRenderer.send` channel. */
-export const RENDERER_CONSOLE_IPC_CHANNEL = 'renderer-console' as const
-
-const rendererLogging: { browserToTerminal: RendererBrowserToTerminal } = {
-  browserToTerminal: is.dev ? 'warn' : false
-}
-
-function shouldWriteRendererLog(level: RendererConsoleLevel): boolean {
-  switch (rendererLogging.browserToTerminal) {
-    case true:
-      return true
-    case 'warn':
-      return level === 'warn' || level === 'error'
-    case 'error':
-      return level === 'error'
-    default:
-      return false
-  }
-}
+import {
+  RENDERER_CONSOLE_IPC_CHANNEL,
+  rendererLogging,
+  shouldWriteRendererLog,
+  type RendererConsolePayload
+} from '../shared/rendererConsole'
 
 function writeRendererLog(payload: RendererConsolePayload): void {
   const locationSuffix = payload.source ? ` (${payload.source})` : ''
@@ -53,7 +29,7 @@ function writeRendererLog(payload: RendererConsolePayload): void {
 
 export function registerRendererConsoleIpc(ipcMain: IpcMain): void {
   ipcMain.on(RENDERER_CONSOLE_IPC_CHANNEL, (_event, payload: RendererConsolePayload) => {
-    if (!shouldWriteRendererLog(payload.level)) {
+    if (!shouldWriteRendererLog(rendererLogging.browserToTerminal, payload.level)) {
       return
     }
 

@@ -1,4 +1,10 @@
-const FORWARDED_CONSOLE_METHODS = ['log', 'info', 'warn', 'error'] as const
+import {
+  rendererLogging,
+  shouldWriteRendererLog,
+  type RendererConsoleLevel
+} from '../../../shared/rendererConsole'
+
+const FORWARDED_CONSOLE_METHODS = ['log', 'info', 'warn', 'error'] as const satisfies readonly RendererConsoleLevel[]
 const CONSOLE_PLACEHOLDER_PATTERN = /%[%sdifoOc]/gu
 
 type ForwardedConsoleMethod = (typeof FORWARDED_CONSOLE_METHODS)[number]
@@ -15,7 +21,11 @@ declare global {
 }
 
 export function installRendererConsoleForwarding(): void {
-  if (!import.meta.env.DEV || typeof window === 'undefined' || !window.electron?.forwardRendererConsole) {
+  if (
+    typeof window === 'undefined' ||
+    !window.electron?.forwardRendererConsole ||
+    rendererLogging.browserToTerminal === false
+  ) {
     return
   }
 
@@ -42,6 +52,10 @@ export function installRendererConsoleForwarding(): void {
   FORWARDED_CONSOLE_METHODS.forEach((level) => {
     consoleProxy[level] = (...args: unknown[]) => {
       state.originals[level](...args)
+
+      if (!shouldWriteRendererLog(rendererLogging.browserToTerminal, level)) {
+        return
+      }
 
       try {
         window.electron.forwardRendererConsole({

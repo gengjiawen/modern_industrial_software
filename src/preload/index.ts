@@ -1,20 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { RENDERER_CONSOLE_IPC_CHANNEL, type RendererConsolePayload } from '../shared/rendererConsole'
 
 type ReadExcelFileArgs = {
   path: string
   sheet: string
 }
 
-type RendererConsolePayload = {
-  level: 'log' | 'info' | 'warn' | 'error'
-  message: string
-  source?: string
-}
-
 const api = {
   readExcelFile: (args: ReadExcelFileArgs) => ipcRenderer.invoke('read-excel-file', args),
-  forwardRendererConsole: (payload: RendererConsolePayload) => ipcRenderer.send('renderer-console', payload)
+  forwardRendererConsole: (payload: RendererConsolePayload) => ipcRenderer.send(RENDERER_CONSOLE_IPC_CHANNEL, payload)
 }
 
 const electronBridge = {

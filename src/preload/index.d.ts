@@ -1,14 +1,9 @@
 import type { ElectronAPI } from '@electron-toolkit/preload'
+import type { RendererConsolePayload } from '../shared/rendererConsole'
 
 type ReadExcelFileArgs = {
   path: string
   sheet: string
-}
-
-type RendererConsolePayload = {
-  level: 'log' | 'info' | 'warn' | 'error'
-  message: string
-  source?: string
 }
 
 type RendererElectronAPI = ElectronAPI & {
