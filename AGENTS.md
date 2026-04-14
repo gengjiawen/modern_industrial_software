@@ -16,6 +16,12 @@ Use pnpm as the package manager
 - **Linting**: oxlint (via `pnpm lint` / `pnpm lint:fix`). Configuration in `.oxlintrc.json`.
 - **Formatting**: oxfmt (via `pnpm run format`). Configuration in `.oxfmtrc.json`.
 
+#### Logging Conventions
+
+- In development, renderer `console.log/info/warn/error` output is mirrored to the main-process terminal through preload IPC.
+- The forwarding mode is configured in `src/shared/rendererConsole.ts` via `rendererLogging.browserToTerminal`; default is `'warn'`, which mirrors renderer `warn` and `error` output in a Next.js-style browser-to-terminal flow.
+- Preserve the original browser console behavior when extending renderer logging; terminal mirroring is additive and should continue to include source locations when available.
+
 #### i18n Conventions
 
 - Stack: i18next + react-i18next; init at src/renderer/src/i18n.ts and import once in src/renderer/src/main.tsx.

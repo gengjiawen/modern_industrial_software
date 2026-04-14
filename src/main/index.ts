@@ -4,6 +4,7 @@ import { pathToFileURL } from 'url'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import creatWorker from './excel_worker?nodeWorker'
+import { registerRendererConsoleIpc } from './rendererLogging'
 
 let settingsWindow: BrowserWindow | null = null
 
@@ -161,6 +162,7 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  registerRendererConsoleIpc(ipcMain)
 
   ipcMain.handle('read-excel-file', (_event, args) => {
     return new Promise((resolve, reject) => {
