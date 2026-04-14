@@ -41,6 +41,12 @@ Use pnpm as the package manager
 - Supported settings URLs are `#/settings` and `#/settings?standalone=1`; menu/shortcut driven standalone settings should use the latter.
 - Prefer normal route-level or component-level lazy loading only; do not add extra chart-specific bundle rules unless there is a demonstrated need.
 
+#### Dependency Conventions
+
+- Dependencies used **only in the renderer process** (`src/renderer/`) must be installed as `devDependencies`. Vite bundles them into the renderer output, and `electron-builder` excludes `devDependencies` from the packaged app, keeping the final package size smaller. See: https://electron-vite.org/guide/dependency-handling
+- Dependencies used in the **main process** (`src/main/`) or **preload** (`src/preload/`) must remain in `dependencies`, because `electron-vite` externalizes them (`externalizeDeps: true`) and they are resolved from `node_modules` at runtime.
+- When adding a new package, determine which process(es) import it and place it in the correct section accordingly.
+
 #### Documentation Conventions
 
 - Changes that alter project-wide architecture, routing, public entry points, build workflows, or core stack assumptions must update the relevant docs in the same change.
