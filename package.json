@@ -4,6 +4,7 @@
   "description": "An Electron application with React and TypeScript",
   "homepage": "https://electron-vite.org",
   "author": "example.com",
+  "packageManager": "pnpm@9.15.9",
   "main": "./out/main/index.js",
   "scripts": {
     "start": "electron-vite preview",
