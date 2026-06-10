@@ -9,7 +9,7 @@
   - `src/preload/`: preload scripts (secure API bridge)
   - `src/renderer/`: frontend UI (React + shadcn/ui + Tailwind CSS)
 
-Use pnpm as the package manager
+Use pnpm as the package manager (v11; CI pins `11.5.2`). pnpm settings belong in `pnpm-workspace.yaml` (`allowBuilds`, `shamefullyHoist`), not `package.json#pnpm` or `.npmrc`.
 
 #### Code Quality Conventions
 
