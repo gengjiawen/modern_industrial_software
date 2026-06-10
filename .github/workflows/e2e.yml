@@ -37,6 +37,9 @@ jobs:
       - name: Ensure Electron binary is installed
         run: pnpm rebuild electron
 
+      - name: Verify Electron resolves from project root
+        run: node -e "console.log(require('electron'))"
+
       - name: Run Electron startup e2e test
         run: pnpm test:e2e
 

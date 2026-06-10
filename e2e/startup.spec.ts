@@ -1,19 +1,25 @@
+import { createRequire } from 'node:module'
+import { dirname, join, resolve } from 'node:path'
+
 import { test, expect, _electron as electron, ElectronApplication } from '@playwright/test'
-import { resolve } from 'path'
+
+const requireFromRoot = createRequire(resolve(process.cwd(), 'package.json'))
+const electronExecutablePath = requireFromRoot('electron') as string
+const playwrightCoreDir = dirname(requireFromRoot.resolve('playwright-core/package.json'))
+const electronLoaderPath = join(playwrightCoreDir, 'lib/server/electron/loader.js')
 
 let electronApp: ElectronApplication
 
 test.beforeEach(async () => {
-  // Launch the Electron app
   electronApp = await electron.launch({
-    args: [resolve(process.cwd(), 'out/main/index.js')],
+    executablePath: electronExecutablePath,
+    args: ['-r', electronLoaderPath, resolve(process.cwd(), 'out/main/index.js')],
     env: {
       ...process.env,
       NODE_ENV: 'test'
     }
   })
 
-  // Wait for the app to be ready
   await electronApp.waitForEvent('window')
 })
 
