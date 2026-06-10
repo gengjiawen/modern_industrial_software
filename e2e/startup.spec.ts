@@ -4,7 +4,6 @@ import { resolve } from 'path'
 let electronApp: ElectronApplication
 
 test.beforeEach(async () => {
-  // Launch the Electron app
   electronApp = await electron.launch({
     args: [resolve(process.cwd(), 'out/main/index.js')],
     env: {
@@ -13,7 +12,6 @@ test.beforeEach(async () => {
     }
   })
 
-  // Wait for the app to be ready
   await electronApp.waitForEvent('window')
 })
 
