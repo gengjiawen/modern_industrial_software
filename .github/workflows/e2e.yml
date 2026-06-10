@@ -35,10 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Ensure Electron binary is installed
-        run: pnpm rebuild electron
-
-      - name: Verify Electron resolves from project root
-        run: node -e "console.log(require('electron'))"
+        run: node -e "const {execFileSync}=require('child_process'); const path=require('path'); const install=path.join(path.dirname(require.resolve('electron/package.json')),'install.js'); execFileSync(process.execPath,[install],{stdio:'inherit',env:{...process.env,force_no_cache:'true'}}); console.log(require('electron'))"
 
       - name: Run Electron startup e2e test
         run: pnpm test:e2e
