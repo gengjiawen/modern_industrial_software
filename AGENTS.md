@@ -15,6 +15,12 @@ Use pnpm as the package manager (v11; CI pins `11.5.2`). pnpm settings belong in
 
 - **Linting**: oxlint (via `pnpm lint` / `pnpm lint:fix`). Configuration in `.oxlintrc.json`.
 - **Formatting**: oxfmt (via `pnpm run format`). Configuration in `.oxfmtrc.json`.
+- **Type checking**: TypeScript 7 (via `pnpm typecheck`, which runs `typecheck:node` and `typecheck:web`).
+
+#### TypeScript Conventions
+
+- TypeScript 7 removed `baseUrl`. Declare path aliases as relative `paths` entries (e.g. `"@/*": ["./src/renderer/src/*"]`), resolved against the directory of the `tsconfig` that declares them.
+- Renderer aliases must stay in sync between `tsconfig.web.json#paths` and the Vite `resolve.alias` map in `vite.renderer.shared.ts`.
 
 #### Logging Conventions
 
