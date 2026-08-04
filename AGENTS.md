@@ -4,6 +4,7 @@
 - **Goal**: Provide extensible desktop data processing and visualization, with cross-platform builds and auto-updates.
 - **Routing**: TanStack Router file-based routing in the renderer, using `createHashHistory()` with Electron URLs in the form `#/...`.
 - **State Management**: Jotai for renderer-side client state.
+- **Charts**: TanStack Charts (`@tanstack/charts` + `@tanstack/react-charts`) in `src/renderer/src/features/charts/`.
 - **Main Modules**:
   - `src/main/`: Electron main process (window management, IPC, worker scheduling)
   - `src/preload/`: preload scripts (secure API bridge)
@@ -52,6 +53,15 @@ Use pnpm as the package manager (v11; CI pins `11.5.2`). pnpm settings belong in
 - The global router preload strategy is `defaultPreload: 'viewport'`; treat it as the default unless a measured issue justifies a narrower or broader strategy.
 - Supported settings URLs are `#/settings` and `#/settings?standalone=1`; menu/shortcut driven standalone settings should use the latter.
 - Prefer normal route-level or component-level lazy loading only; do not add extra chart-specific bundle rules unless there is a demonstrated need.
+
+#### Charting Conventions
+
+- Charts use TanStack Charts; `src/renderer/src/features/charts/LineTrendChart.tsx` is the shared line-chart wrapper, and feature charts should compose it instead of defining their own chart scenes.
+- Import from granular entries (`@tanstack/charts/scene`, `/line`, `/legend`, `/tooltip`, `@tanstack/charts-scales/linear`), not the root `@tanstack/charts` barrel. The barrel re-exports the bar marks, which import `d3-scale` at runtime without declaring it as a dependency, so it fails to resolve at build time and also pulls unused marks into the chart chunk.
+- Chart data is long/tidy: one row per series-point (`{ label, series, value }`), not one row per x with a column per series. Keep missing values as `null` so gaps stay gaps rather than being connected across.
+- Series colors come from the `--chart-*` custom properties in `global.css`; everything else follows `currentColor`, so charts theme themselves in light and dark mode.
+- Memoize the data and series inputs passed into the wrapper; a new array identity on every render rebuilds the chart definition.
+- Pass a translated `ariaLabel` to every chart.
 
 #### Dependency Conventions
 

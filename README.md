@@ -8,7 +8,7 @@
 - **Modern UI**: React + shadcn/ui + Tailwind CSS, with theming and desktop-oriented layout primitives.
 - **Structured navigation**: TanStack Router file-based routing with Electron-friendly hash URLs.
 - **Lean loading**: route-level and component-level chunking keeps chart and preview code out of the initial path until needed.
-- **Data processing & visualization**: Excel (.xlsx) parsing, workbook preview, and chart views for industrial data scenarios.
+- **Data processing & visualization**: Excel (.xlsx) parsing, workbook preview, and TanStack Charts views for industrial data scenarios.
 - **Secure bridge**: minimal, testable `contextBridge` API over IPC.
 - **Cross‑platform + auto‑updates**: one codebase for Windows / macOS / Linux, integrated with `electron-updater`.
 - **Built‑in i18n**: i18next + react-i18next with `en-US` and `zh-CN` out of the box.

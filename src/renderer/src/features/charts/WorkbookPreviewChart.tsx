@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { LineChart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -12,16 +13,23 @@ type WorkbookPreviewChartProps = {
 export function WorkbookPreviewChart({ preview }: WorkbookPreviewChartProps) {
   const { t } = useTranslation()
 
+  const series = useMemo(
+    () =>
+      preview.series.map((item) => ({
+        color: item.color,
+        key: item.key,
+        label: item.key
+      })),
+    [preview.series]
+  )
+
   return (
     <div className="space-y-5">
       <LineTrendChart
+        ariaLabel={t('Series preview')}
         data={preview.rows}
         labelKey={preview.labelKey}
-        series={preview.series.map((item) => ({
-          color: item.color,
-          key: item.key,
-          label: item.key
-        }))}
+        series={series}
       />
       <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4">
         <div className="mb-3 flex items-center gap-2 text-sm font-medium">
