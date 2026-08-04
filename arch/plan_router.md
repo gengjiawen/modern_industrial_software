@@ -32,7 +32,7 @@
   - Move the existing `src/renderer/src/ChartDemo.tsx` into `features/charts/` as a chart UI module instead of mounting it directly in `App.tsx`.
   - Extract the chart rendering area in `src/renderer/src/UploadPage.tsx` into `features/charts/WorkbookPreviewChart`; render it through dynamic import only when `chartPreview` exists, so no chart chunk is requested when no file is uploaded or no plottable data exists.
   - Keep spreadsheet parsing, worksheet selection, and chart preview derivation in the upload feature so chart chunks contain presentation code, not upload business logic.
-  - Ensure the idle upload state and the "no chartable data" state render without importing `recharts` or the chart UI chunk.
+  - Ensure the idle upload state and the "no chartable data" state render without importing the charting library or the chart UI chunk.
   - Provide a lightweight skeleton/fallback consistently for chart lazy-loading to avoid blank flashes on route switches or first render.
 - Navigation and state:
   - Convert sidebar buttons, home shortcut buttons, and Logo/Home navigation to Router-based navigation.

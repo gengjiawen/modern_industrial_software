@@ -80,7 +80,12 @@ export function SignalTrendOverview() {
         </div>
       </CardHeader>
       <CardContent>
-        <LineTrendChart data={data} labelKey="date" series={series} />
+        <LineTrendChart
+          ariaLabel={t('Signal trend overview')}
+          data={data}
+          labelKey="date"
+          series={series}
+        />
       </CardContent>
     </Card>
   )
